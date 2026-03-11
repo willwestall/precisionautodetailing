@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Precision Auto Detailing</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black: #0a0a0a;
+    --white: #f5f5f0;
+    --gray: #888;
+    --light-gray: #e0e0da;
+    --mid-gray: #2a2a2a;
+    --accent: #f5f5f0;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    overflow-x: hidden;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 24px 48px;
+    background: rgba(10,10,10,0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .nav-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    letter-spacing: 0.12em;
+    color: var(--white);
+    text-decoration: none;
+  }
+  .nav-links { display: flex; gap: 36px; align-items: center; }
+  .nav-links a {
+    color: var(--gray);
+    text-decoration: none;
+    font-size: 13px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--white); }
+  .nav-cta {
+    background: var(--white);
+    color: var(--black) !important;
+    padding: 10px 22px;
+    font-weight: 500 !important;
+    cursor: pointer;
+  }
+  .nav-cta:hover { background: var(--light-gray) !important; }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex; flex-direction: column; justify-content: center;
+    padding: 120px 48px 80px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-bg {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 60% 50% at 70% 50%, rgba(255,255,255,0.04) 0%, transparent 70%),
+      repeating-linear-gradient(0deg, transparent, transparent 79px, rgba(255,255,255,0.02) 80px),
+      repeating-linear-gradient(90deg, transparent, transparent 79px, rgba(255,255,255,0.02) 80px);
+  }
+  .hero-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    color: var(--gray);
+    text-transform: uppercase;
+    margin-bottom: 28px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.2s;
+  }
+  .hero-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(72px, 12vw, 160px);
+    line-height: 0.9;
+    letter-spacing: 0.02em;
+    color: var(--white);
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.4s;
+  }
+  .hero-title span { color: transparent; -webkit-text-stroke: 1px rgba(255,255,255,0.3); }
+  .hero-sub {
+    max-width: 440px;
+    margin-top: 36px;
+    font-size: 16px;
+    line-height: 1.7;
+    color: var(--gray);
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.6s;
+  }
+  .hero-actions {
+    display: flex; gap: 16px; margin-top: 48px;
+    opacity: 0; animation: fadeUp 0.8s ease forwards 0.8s;
+  }
+  .btn-primary {
+    background: var(--white); color: var(--black);
+    padding: 16px 36px; font-size: 13px; font-weight: 500;
+    letter-spacing: 0.06em; text-transform: uppercase;
+    border: none; cursor: pointer; transition: all 0.2s;
+    text-decoration: none; display: inline-block;
+  }
+  .btn-primary:hover { background: var(--light-gray); transform: translateY(-1px); }
+  .btn-ghost {
+    background: transparent; color: var(--white);
+    padding: 16px 36px; font-size: 13px; font-weight: 500;
+    letter-spacing: 0.06em; text-transform: uppercase;
+    border: 1px solid rgba(255,255,255,0.2); cursor: pointer; transition: all 0.2s;
+    text-decoration: none; display: inline-block;
+  }
+  .btn-ghost:hover { border-color: var(--white); }
+
+  .hero-scroll {
+    position: absolute; bottom: 40px; left: 48px;
+    display: flex; align-items: center; gap: 12px;
+    font-family: 'DM Mono', monospace; font-size: 10px;
+    letter-spacing: 0.15em; color: var(--gray); text-transform: uppercase;
+    opacity: 0; animation: fadeUp 0.8s ease forwards 1.2s;
+  }
+  .hero-scroll::before {
+    content: ''; width: 40px; height: 1px; background: var(--gray);
+  }
+
+  /* MARQUEE */
+  .marquee-wrap {
+    border-top: 1px solid rgba(255,255,255,0.08);
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    overflow: hidden; padding: 18px 0;
+    background: rgba(255,255,255,0.02);
+  }
+  .marquee-track {
+    display: flex; gap: 0;
+    animation: marquee 22s linear infinite;
+    white-space: nowrap;
+  }
+  .marquee-item {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 14px; letter-spacing: 0.15em;
+    color: var(--gray); padding: 0 48px;
+    display: flex; align-items: center; gap: 48px;
+  }
+  .marquee-item::after { content: '✦'; color: rgba(255,255,255,0.2); }
+
+  /* SERVICES */
+  .section { padding: 120px 48px; }
+  .section-label {
+    font-family: 'DM Mono', monospace; font-size: 11px;
+    letter-spacing: 0.2em; color: var(--gray); text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(40px, 6vw, 72px);
+    line-height: 1; letter-spacing: 0.03em;
+    margin-bottom: 64px;
+  }
+
+  .services-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: rgba(255,255,255,0.08); }
+  .service-card {
+    background: var(--black); padding: 48px 40px;
+    transition: background 0.3s;
+    position: relative; overflow: hidden;
+  }
+  .service-card:hover { background: var(--mid-gray); }
+  .service-num {
+    font-family: 'DM Mono', monospace; font-size: 11px;
+    color: var(--gray); letter-spacing: 0.1em; margin-bottom: 32px;
+  }
+  .service-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px; letter-spacing: 0.05em;
+    margin-bottom: 16px;
+  }
+  .service-desc {
+    font-size: 14px; line-height: 1.7; color: var(--gray);
+    margin-bottom: 24px;
+  }
+  .service-price {
+    font-family: 'DM Mono', monospace; font-size: 13px;
+    color: var(--white); letter-spacing: 0.05em;
+  }
+  .service-price span { color: var(--gray); font-size: 11px; }
+
+  /* BOOKING */
+  .booking-section {
+    padding: 120px 48px;
+    background: var(--white); color: var(--black);
+  }
+  .booking-section .section-label { color: #555; }
+  .booking-section .section-title { color: var(--black); }
+
+  .booking-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start; }
+  .booking-info p { font-size: 16px; line-height: 1.8; color: #555; margin-bottom: 32px; }
+  .booking-detail {
+    display: flex; gap: 16px; margin-bottom: 16px; align-items: flex-start;
+  }
+  .booking-detail-icon {
+    width: 32px; height: 32px; background: var(--black);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; font-size: 14px;
+  }
+  .booking-detail-text { font-size: 14px; color: #333; line-height: 1.5; }
+
+  .booking-form { display: flex; flex-direction: column; gap: 16px; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .form-group { display: flex; flex-direction: column; gap: 8px; }
+  .form-group label {
+    font-size: 11px; font-weight: 500; letter-spacing: 0.1em;
+    text-transform: uppercase; color: #333;
+    font-family: 'DM Mono', monospace;
+  }
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    background: var(--black); color: var(--white);
+    border: 1px solid rgba(0,0,0,0.1); padding: 14px 16px;
+    font-family: 'DM Sans', sans-serif; font-size: 14px;
+    outline: none; transition: border-color 0.2s;
+    appearance: none; -webkit-appearance: none;
+  }
+  .form-group select { background: var(--black); cursor: pointer; }
+  .form-group input:focus,
+  .form-group select:focus,
+  .form-group textarea:focus { border-color: var(--black); }
+  .form-group textarea { resize: vertical; min-height: 90px; }
+  .form-group input::placeholder,
+  .form-group textarea::placeholder { color: #555; }
+  .form-submit {
+    background: var(--black); color: var(--white);
+    padding: 18px 36px; border: none; cursor: pointer;
+    font-family: 'DM Sans', sans-serif; font-size: 13px;
+    font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase;
+    transition: background 0.2s; margin-top: 8px;
+  }
+  .form-submit:hover { background: #222; }
+
+  .success-msg {
+    display: none;
+    background: #0a0a0a; color: var(--white);
+    padding: 24px; margin-top: 16px;
+    font-size: 14px; line-height: 1.6;
+    border-left: 3px solid #0a0a0a;
+  }
+
+  /* FOOTER */
+  footer {
+    padding: 64px 48px;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  footer .logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px; letter-spacing: 0.12em;
+  }
+  footer p { font-size: 13px; color: var(--gray); }
+  .owner-link {
+    font-family: 'DM Mono', monospace; font-size: 11px;
+    color: var(--gray); text-decoration: none; letter-spacing: 0.1em;
+    border-bottom: 1px solid transparent; transition: all 0.2s;
+  }
+  .owner-link:hover { color: var(--white); border-bottom-color: var(--white); }
+
+  /* MODAL BASE */
+  .modal-overlay {
+    display: none; position: fixed; inset: 0; z-index: 200;
+    background: rgba(0,0,0,0.8); backdrop-filter: blur(4px);
+    align-items: center; justify-content: center;
+  }
+  .modal-overlay.active { display: flex; }
+  .modal {
+    background: var(--black); border: 1px solid rgba(255,255,255,0.12);
+    width: 90%; max-width: 440px; padding: 48px;
+    animation: modalIn 0.3s ease;
+  }
+  .modal-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 32px; letter-spacing: 0.05em; margin-bottom: 8px;
+  }
+  .modal-sub { font-size: 13px; color: var(--gray); margin-bottom: 32px; }
+  .modal-input {
+    width: 100%; background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1); color: var(--white);
+    padding: 14px 16px; font-family: 'DM Sans', sans-serif; font-size: 14px;
+    outline: none; margin-bottom: 16px; transition: border-color 0.2s;
+  }
+  .modal-input:focus { border-color: rgba(255,255,255,0.4); }
+  .modal-btn {
+    width: 100%; background: var(--white); color: var(--black);
+    padding: 16px; border: none; cursor: pointer;
+    font-family: 'DM Sans', sans-serif; font-size: 13px;
+    font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase;
+    transition: background 0.2s;
+  }
+  .modal-btn:hover { background: var(--light-gray); }
+  .modal-error {
+    color: #ff6b6b; font-size: 12px; margin-bottom: 12px; display: none;
+  }
+  .modal-close {
+    position: absolute; top: 16px; right: 20px;
+    background: none; border: none; color: var(--gray);
+    font-size: 22px; cursor: pointer; transition: color 0.2s;
+  }
+  .modal-close:hover { color: var(--white); }
+
+  /* DASHBOARD */
+  .dashboard-modal {
+    background: var(--black); border: 1px solid rgba(255,255,255,0.12);
+    width: 95%; max-width: 900px;
+    max-height: 85vh; overflow-y: auto;
+    animation: modalIn 0.3s ease;
+    position: relative;
+  }
+  .dashboard-header {
+    padding: 36px 48px 24px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    display: flex; justify-content: space-between; align-items: center;
+    position: sticky; top: 0; background: var(--black); z-index: 10;
+  }
+  .dashboard-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px; letter-spacing: 0.06em;
+  }
+  .dashboard-body { padding: 32px 48px 48px; }
+
+  .dash-stats {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
+    margin-bottom: 40px;
+  }
+  .dash-stat {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    padding: 24px;
+  }
+  .dash-stat-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 40px; letter-spacing: 0.03em; line-height: 1;
+    margin-bottom: 6px;
+  }
+  .dash-stat-label {
+    font-size: 11px; color: var(--gray); letter-spacing: 0.1em;
+    text-transform: uppercase; font-family: 'DM Mono', monospace;
+  }
+
+  .dash-section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px; letter-spacing: 0.08em;
+    margin-bottom: 16px; color: var(--gray);
+  }
+
+  .booking-table { width: 100%; border-collapse: collapse; }
+  .booking-table th {
+    text-align: left; padding: 10px 16px;
+    font-family: 'DM Mono', monospace; font-size: 10px;
+    letter-spacing: 0.12em; text-transform: uppercase; color: var(--gray);
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+  .booking-table td {
+    padding: 14px 16px; font-size: 13px;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    vertical-align: top;
+  }
+  .booking-table tr:hover td { background: rgba(255,255,255,0.02); }
+  .status-badge {
+    display: inline-block; padding: 3px 10px;
+    font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase;
+    font-family: 'DM Mono', monospace;
+    background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.15);
+  }
+  .empty-state {
+    text-align: center; padding: 60px 0;
+    color: var(--gray); font-size: 14px;
+  }
+  .empty-state p { margin-top: 8px; font-size: 12px; color: rgba(255,255,255,0.2); }
+
+  .dash-logout {
+    background: none; border: 1px solid rgba(255,255,255,0.15);
+    color: var(--gray); padding: 8px 20px;
+    font-family: 'DM Mono', monospace; font-size: 11px;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    cursor: pointer; transition: all 0.2s;
+  }
+  .dash-logout:hover { border-color: var(--white); color: var(--white); }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+  @keyframes modalIn {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 768px) {
+    nav { padding: 20px 24px; }
+    .nav-links { display: none; }
+    .hero { padding: 100px 24px 60px; }
+    .section { padding: 80px 24px; }
+    .services-grid { grid-template-columns: 1fr; }
+    .booking-section { padding: 80px 24px; }
+    .booking-grid { grid-template-columns: 1fr; gap: 40px; }
+    .form-row { grid-template-columns: 1fr; }
+    footer { flex-direction: column; gap: 16px; text-align: center; padding: 40px 24px; }
+    .modal { padding: 32px 24px; }
+    .dashboard-header { padding: 24px; }
+    .dashboard-body { padding: 24px; }
+    .dash-stats { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="#">Precision Auto Detailing</a>
+  <div class="nav-links">
+    <a href="#services">Services</a>
+    <a href="#booking">Book Now</a>
+    <a href="#booking" class="nav-cta">Schedule Service</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-tag">Warrenville, IL · Est. 2024</div>
+  <h1 class="hero-title">Precision<br><span>Auto</span><br>Detailing</h1>
+  <p class="hero-sub">Professional-grade detailing that restores, protects, and perfects your vehicle — done right, every time.</p>
+  <div class="hero-actions">
+    <a href="#booking" class="btn-primary">Book a Detail</a>
+    <a href="#services" class="btn-ghost">View Services</a>
+  </div>
+  <div class="hero-scroll">Scroll to explore</div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-wrap">
+  <div class="marquee-track" id="marqueeTrack">
+    <div class="marquee-item">Exterior Wash &amp; Wax</div>
+    <div class="marquee-item">Interior Detailing</div>
+    <div class="marquee-item">Full Detail Packages</div>
+    <div class="marquee-item">Showroom Finish</div>
+    <div class="marquee-item">Precision Every Time</div>
+    <div class="marquee-item">Exterior Wash &amp; Wax</div>
+    <div class="marquee-item">Interior Detailing</div>
+    <div class="marquee-item">Full Detail Packages</div>
+    <div class="marquee-item">Showroom Finish</div>
+    <div class="marquee-item">Precision Every Time</div>
+  </div>
+</div>
+
+<!-- SERVICES -->
+<section class="section" id="services">
+  <div class="section-label">What We Offer</div>
+  <h2 class="section-title">Our Services</h2>
+  <div class="services-grid">
+    <div class="service-card">
+      <div class="service-num">01</div>
+      <div class="service-name">Exterior Wash &amp; Wax</div>
+      <p class="service-desc">Hand wash, clay bar treatment, and professional wax application for a deep, lasting shine. Includes wheel cleaning, tire dressing, and window polish.</p>
+      <div class="service-price">$50 – $75 <span>/ vehicle</span></div>
+    </div>
+    <div class="service-card">
+      <div class="service-num">02</div>
+      <div class="service-name">Interior Detailing</div>
+      <p class="service-desc">Deep vacuum, leather conditioning, and odor elimination. Every surface cleaned and every detail addressed — your cabin, completely refreshed.</p>
+      <div class="service-price">$75 – $100 <span>/ vehicle</span></div>
+    </div>
+    <div class="service-card">
+      <div class="service-num">03</div>
+      <div class="service-name">Full Detail Package</div>
+      <p class="service-desc">The complete treatment — exterior wash, clay, wax, full interior detailing, engine bay clean, and final inspection. The best your car has ever looked.</p>
+      <div class="service-price">$200 – $250 <span>/ vehicle</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- BOOKING -->
+<section class="booking-section" id="booking">
+  <div class="section-label" style="color:#555;">Schedule Service</div>
+  <h2 class="section-title">Book Your Detail</h2>
+  <div class="booking-grid">
+    <div class="booking-info">
+      <p>Ready to give your vehicle the care it deserves? Fill out the form and we'll confirm your appointment within 24 hours.</p>
+      <div class="booking-detail">
+        <div class="booking-detail-icon">📍</div>
+        <div class="booking-detail-text">Warrenville, IL and surrounding areas. Mobile service available — we come to you.</div>
+      </div>
+      <div class="booking-detail">
+        <div class="booking-detail-icon">📞</div>
+        <div class="booking-detail-text">Call or text us at <a href="tel:6304330862" style="color:#0a0a0a;font-weight:500;">(630) 433-0862</a> for a quick quote or questions about your vehicle.</div>
+      </div>
+    </div>
+    <div>
+      <form class="booking-form" id="bookingForm">
+        <div class="form-row">
+          <div class="form-group">
+            <label>First Name</label>
+            <input type="text" placeholder="John" required id="fname">
+          </div>
+          <div class="form-group">
+            <label>Last Name</label>
+            <input type="text" placeholder="Smith" required id="lname">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Phone</label>
+            <input type="tel" placeholder="(630) 555-0100" required id="phone">
+          </div>
+          <div class="form-group">
+            <label>Email</label>
+            <input type="email" placeholder="john@email.com" id="email">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Service</label>
+          <select required id="service">
+            <option value="" disabled selected>Select a service…</option>
+            <option value="Exterior Wash & Wax">Exterior Wash &amp; Wax — $50–$75</option>
+            <option value="Interior Detailing">Interior Detailing — $75–$100</option>
+            <option value="Full Detail Package">Full Detail Package — $200–$250</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Preferred Date</label>
+            <input type="date" required id="date">
+          </div>
+          <div class="form-group">
+            <label>Preferred Time</label>
+            <select required id="time">
+              <option value="" disabled selected>Select time…</option>
+              <option>8:00 AM</option>
+              <option>9:00 AM</option>
+              <option>10:00 AM</option>
+              <option>11:00 AM</option>
+              <option>12:00 PM</option>
+              <option>1:00 PM</option>
+              <option>2:00 PM</option>
+              <option>3:00 PM</option>
+              <option>4:00 PM</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Vehicle (Year, Make, Model)</label>
+          <input type="text" placeholder="e.g. 2019 Honda Accord" required id="vehicle">
+        </div>
+        <div class="form-group">
+          <label>Additional Notes</label>
+          <textarea placeholder="Anything specific we should know about your vehicle?" id="notes"></textarea>
+        </div>
+        <button type="submit" class="form-submit">Request Appointment →</button>
+      </form>
+      <div class="success-msg" id="successMsg">
+        ✓ &nbsp; Booking received! We'll confirm your appointment within 24 hours. Thank you!
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="logo">Precision Auto Detailing</div>
+  <p>© 2025 Precision Auto Detailing · Warrenville, IL · <a href="tel:6304330862" style="color:#888;text-decoration:none;">(630) 433-0862</a></p>
+  <a class="owner-link" href="#" onclick="openLoginModal(event)">Owner Login</a>
+</footer>
+
+<!-- LOGIN MODAL -->
+<div class="modal-overlay" id="loginModal">
+  <div class="modal" style="position:relative;">
+    <button class="modal-close" onclick="closeModal('loginModal')">×</button>
+    <div class="modal-title">Owner Access</div>
+    <div class="modal-sub">Enter your password to view the booking dashboard.</div>
+    <input class="modal-input" type="password" id="passwordInput" placeholder="Password" onkeydown="if(event.key==='Enter')checkPassword()">
+    <div class="modal-error" id="loginError">Incorrect password. Please try again.</div>
+    <button class="modal-btn" onclick="checkPassword()">Enter Dashboard</button>
+  </div>
+</div>
+
+<!-- DASHBOARD MODAL -->
+<div class="modal-overlay" id="dashboardModal">
+  <div class="dashboard-modal">
+    <div class="dashboard-header">
+      <div class="dashboard-title">Booking Dashboard</div>
+      <button class="dash-logout" onclick="logout()">Log Out</button>
+    </div>
+    <div class="dashboard-body">
+      <div class="dash-stats">
+        <div class="dash-stat">
+          <div class="dash-stat-num" id="statTotal">0</div>
+          <div class="dash-stat-label">Total Bookings</div>
+        </div>
+        <div class="dash-stat">
+          <div class="dash-stat-num" id="statUpcoming">0</div>
+          <div class="dash-stat-label">Upcoming</div>
+        </div>
+        <div class="dash-stat">
+          <div class="dash-stat-num" id="statThisWeek">0</div>
+          <div class="dash-stat-label">This Week</div>
+        </div>
+      </div>
+
+      <div class="dash-section-title">All Appointments</div>
+      <div id="bookingsList"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ── CONFIG ──────────────────────────────────────────────
+  const OWNER_PASSWORD = 'detail2025'; // ← change this password!
+
+  // ── IN-MEMORY STORAGE (works everywhere) ─────────────────
+  var bookingsStore = [];
+
+  function getBookings() { return bookingsStore; }
+  function saveBooking(booking) { bookingsStore.unshift(booking); }
+
+  // ── BOOKING FORM ─────────────────────────────────────────
+  document.getElementById('bookingForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    var booking = {
+      id: Date.now(),
+      name: document.getElementById('fname').value.trim() + ' ' + document.getElementById('lname').value.trim(),
+      phone: document.getElementById('phone').value.trim(),
+      email: document.getElementById('email').value.trim(),
+      service: document.getElementById('service').value,
+      date: document.getElementById('date').value,
+      time: document.getElementById('time').value,
+      vehicle: document.getElementById('vehicle').value.trim(),
+      notes: document.getElementById('notes').value.trim(),
+      submitted: new Date().toISOString()
+    };
+    saveBooking(booking);
+    document.getElementById('bookingForm').style.display = 'none';
+    document.getElementById('successMsg').style.display = 'block';
+  });
+
+  // ── MODAL UTILS ──────────────────────────────────────────
+  function openLoginModal(e) {
+    e.preventDefault();
+    document.getElementById('loginError').style.display = 'none';
+    document.getElementById('passwordInput').value = '';
+    document.getElementById('loginModal').classList.add('active');
+    setTimeout(function(){ document.getElementById('passwordInput').focus(); }, 100);
+  }
+
+  function closeModal(id) {
+    document.getElementById(id).classList.remove('active');
+  }
+
+  document.querySelectorAll('.modal-overlay').forEach(function(m) {
+    m.addEventListener('click', function(e) {
+      if (e.target === this) this.classList.remove('active');
+    });
+  });
+
+  // ── AUTH ─────────────────────────────────────────────────
+  function checkPassword() {
+    var pw = document.getElementById('passwordInput').value;
+    if (pw === OWNER_PASSWORD) {
+      document.getElementById('loginError').style.display = 'none';
+      closeModal('loginModal');
+      document.getElementById('passwordInput').value = '';
+      openDashboard();
+    } else {
+      document.getElementById('loginError').style.display = 'block';
+    }
+  }
+
+  document.getElementById('passwordInput').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') checkPassword();
+  });
+
+  function logout() { closeModal('dashboardModal'); }
+
+  // ── DASHBOARD ─────────────────────────────────────────────
+  function openDashboard() {
+    var bookings = getBookings();
+    var today = new Date(); today.setHours(0,0,0,0);
+    var weekEnd = new Date(today); weekEnd.setDate(weekEnd.getDate() + 7);
+
+    var upcoming = bookings.filter(function(b){ return new Date(b.date + 'T12:00:00') >= today; }).length;
+    var thisWeek = bookings.filter(function(b){
+      var d = new Date(b.date + 'T12:00:00');
+      return d >= today && d <= weekEnd;
+    }).length;
+
+    document.getElementById('statTotal').textContent = bookings.length;
+    document.getElementById('statUpcoming').textContent = upcoming;
+    document.getElementById('statThisWeek').textContent = thisWeek;
+
+    var container = document.getElementById('bookingsList');
+    if (bookings.length === 0) {
+      container.innerHTML = '<div class="empty-state">No bookings yet.<p>Appointments submitted through the site will appear here.</p></div>';
+    } else {
+      var sorted = bookings.slice().sort(function(a,b){ return new Date(a.date) - new Date(b.date); });
+      var rows = sorted.map(function(b) {
+        var d = new Date(b.date + 'T12:00:00');
+        var isPast = d < today;
+        var dateStr = d.toLocaleDateString('en-US', { weekday:'short', month:'short', day:'numeric' });
+        var badge = isPast
+          ? '<span class="status-badge" style="opacity:0.4">Past</span>'
+          : '<span class="status-badge">Upcoming</span>';
+        return '<tr>'
+          + '<td><div style="font-weight:500">' + dateStr + '</div>'
+          + '<div style="color:#888;font-size:12px">' + b.time + '</div>'
+          + '<div>' + badge + '</div></td>'
+          + '<td style="font-weight:500">' + b.name + '</td>'
+          + '<td style="color:#aaa">' + b.vehicle + '</td>'
+          + '<td>' + b.service + '</td>'
+          + '<td style="font-size:12px;color:#aaa">' + b.phone + (b.email ? '<br>' + b.email : '') + '</td>'
+          + '<td style="font-size:12px;color:#888;max-width:160px">' + (b.notes || '—') + '</td>'
+          + '</tr>';
+      }).join('');
+
+      container.innerHTML = '<table class="booking-table">'
+        + '<thead><tr><th>Date &amp; Time</th><th>Client</th><th>Vehicle</th><th>Service</th><th>Contact</th><th>Notes</th></tr></thead>'
+        + '<tbody>' + rows + '</tbody>'
+        + '</table>';
+    }
+
+    document.getElementById('dashboardModal').classList.add('active');
+  }
+
+  // ── SET MIN DATE ─────────────────────────────────────────
+  var dateInput = document.getElementById('date');
+  if (dateInput) {
+    var tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    dateInput.min = tomorrow.toISOString().split('T')[0];
+  }
+</script>
+</body>
+</html>
